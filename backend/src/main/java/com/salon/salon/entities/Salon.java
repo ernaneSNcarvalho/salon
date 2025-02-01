@@ -1,5 +1,6 @@
 package com.salon.salon.entities;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -12,7 +13,8 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_salon")
-public class Salon {
+public class Salon implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +22,7 @@ public class Salon {
 	private String name;
 	private String address;
 	private String whatsapp;
+	private String imgUrl;
 	
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant createdAt;
@@ -29,12 +32,21 @@ public class Salon {
 	
 	public Salon() {}
 
-	public Salon(Long id, String name, String address, String whatsapp) {
+	public Salon(Long id, String name, String address, String whatsapp, String imgUrl) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.whatsapp = whatsapp;
+		this.imgUrl = imgUrl;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
 
 	public Long getId() {

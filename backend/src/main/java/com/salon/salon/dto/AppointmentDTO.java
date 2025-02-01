@@ -1,47 +1,31 @@
-package com.salon.salon.entities;
+package com.salon.salon.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import com.salon.salon.entities.Appointment;
+import com.salon.salon.entities.Salon;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "tb_appointment")
-public class Appointment implements Serializable {
+public class AppointmentDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String customerName;
 	private String customerWhatsapp;
 	private LocalDate appointmentDate;
-	
-	@ManyToOne
-	@JoinColumn(name = "salon_id")
 	private Salon salon;
 	
-	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant createdAt;
-	
-	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant updateddAt;
-	
-	public Appointment() {
+	public AppointmentDTO() {
 	}
 
-	public Appointment(Long id, String customerName, String customerWhatsapp, LocalDate appointmentDate, Salon salon) {
+	public AppointmentDTO(Long id, String customerName, String customerWhatsapp, LocalDate appointmentDate,
+			Salon salon) {
 		super();
 		this.id = id;
 		this.customerName = customerName;
@@ -49,15 +33,13 @@ public class Appointment implements Serializable {
 		this.appointmentDate = appointmentDate;
 		this.salon = salon;
 	}
-
-	@PrePersist
-	public void prePersist() {
-		createdAt = Instant.now();
-	}
 	
-	@PreUpdate
-	public void preUpdate() {
-		updateddAt = Instant.now();
+	public AppointmentDTO(Appointment entity) {
+		this.id = entity.getId();
+		this.customerName = entity.getCustomerName();
+		this.customerWhatsapp = entity.getCustomerWhatsapp();
+		this.appointmentDate = entity.getAppointmentDate();
+		this.salon = entity.getSalon();
 	}
 
 	public Long getId() {
@@ -100,20 +82,4 @@ public class Appointment implements Serializable {
 		this.salon = salon;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Appointment other = (Appointment) obj;
-		return Objects.equals(id, other.id);
-	}
 }
