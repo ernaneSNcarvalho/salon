@@ -35,4 +35,11 @@ public class ResourceExceptionHandler {
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
 	}
+	
+	 @ExceptionHandler(InvalidWhatsappException.class)
+	    public ResponseEntity<StandardError> invalidWhatsapp(InvalidWhatsappException e, HttpServletRequest request) {
+	        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR; // Código 500
+	        StandardError err = new StandardError(Instant.now(), status.value(), "Internal Server Error", e.getMessage(), request.getRequestURI());
+	        return ResponseEntity.status(status).body(err);
+	    }
 }

@@ -24,44 +24,45 @@ import com.salon.salon.services.SalonService;
 @RestController
 @RequestMapping(value = "/salons")
 public class SalonResource {
-	
-	@Autowired
-	private SalonService service;
-	
-	@GetMapping
-	public ResponseEntity<Page<SalonDTO>> findAll(
-			@RequestParam(value = "page", defaultValue = "0") Integer page,
-			@RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction
-			){
-			PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-			Page<SalonDTO> list = service.findAllPaged(pageRequest);
-			return ResponseEntity.ok().body(list);
-	}
-	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<SalonDTO> findById(@PathVariable Long id){
-		SalonDTO dto = service.findById(id);
-		return ResponseEntity.ok().body(dto);
-	}
-	
-	@PostMapping
-	public ResponseEntity<SalonDTO> insert(@RequestBody SalonDTO dto){
-		dto = service.insert(dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).body(dto);
-	}
-	
-	@PutMapping(value = "/{id}")
-	public ResponseEntity<SalonDTO> update(@PathVariable Long id, @RequestBody SalonDTO dto){
-		dto = service.update(id, dto);
-		return ResponseEntity.ok().body(dto);
-	}
-	
-	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<SalonDTO> delete(@PathVariable Long id){
-		service.delete(id);
-		return ResponseEntity.noContent().build();
-	}
+    
+    @Autowired
+    private SalonService service;
+    
+    @GetMapping
+    public ResponseEntity<Page<SalonDTO>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+        
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+        Page<SalonDTO> list = service.findAllPaged(pageRequest);
+        return ResponseEntity.ok().body(list);
+    }
+    
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<SalonDTO> findById(@PathVariable Long id) {
+        SalonDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+    
+    @PostMapping
+    public ResponseEntity<SalonDTO> insert(@RequestBody SalonDTO dto) {
+        dto = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
+    }
+    
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<SalonDTO> update(@PathVariable Long id, @RequestBody SalonDTO dto) {
+        dto = service.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+    }
+    
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -6,17 +6,25 @@ import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salon.salon.entities.User;
-import com.salon.salon.validations.ValidWhatsAppNumber;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
+	@NotBlank(message = "Campo obrigatorio.")
 	private String name;
 	
-	@ValidWhatsAppNumber
+	@NotBlank(message = "Campo obrigatorio.")
 	private String whatsapp;
+	
+	@NotBlank(message = "Campo obrigatorio.")
 	private String email;
+	
+	@NotBlank(message = "Campo obrigatorio.")
 	private String address;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")

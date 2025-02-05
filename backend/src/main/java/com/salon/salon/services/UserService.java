@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import com.salon.salon.dto.UserDTO;
 import com.salon.salon.entities.User;
 import com.salon.salon.repositories.UserRepository;
 import com.salon.salon.resources.exceptions.DatabaseException;
+import com.salon.salon.resources.exceptions.InvalidWhatsappException;
 import com.salon.salon.resources.exceptions.ResourceNotFoundException;
 
 @Service
@@ -22,6 +22,8 @@ public class UserService {
 	
 	@Autowired
 	private UserRepository repository;
+	
+	private static final String REGEX_WHATSAPP = "^\\+55\\s?[1-9]{2}\\s?9?[0-9]{8}$";
 	
 	@Transactional(readOnly = true)
 	public Page<UserDTO> findAllPaged(Pageable pageable){
@@ -67,10 +69,17 @@ public class UserService {
 	}
 	
 	private void copyDtoToEntity(UserDTO dto, User entity) {
+		validarNumeroWhatsApp(dto.getWhatsapp());
 	    entity.setName(dto.getName());
 	    entity.setWhatsapp(dto.getWhatsapp());
 	    entity.setEmail(dto.getEmail());
 	    entity.setAddress(dto.getAddress());
 	    entity.setBirthDate(dto.getBirthDateAsLocalDate()); // Converte String para LocalDate
 	}
+	
+	 public void validarNumeroWhatsApp(String numeroWhatsApp) {
+	        if (numeroWhatsApp == null || !numeroWhatsApp.matches(REGEX_WHATSAPP)) {
+	            throw new InvalidWhatsappException("Número de WhatsApp inválido");
+	        }
+	    }
 }
